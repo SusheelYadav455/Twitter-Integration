@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Fabric/Fabric.h>
+#import <TwitterKit/TwitterKit.h>
 
-@interface ViewController : UIViewController
 
-
+@interface ViewController :TWTRTimelineViewController <TWTRTimelineDataSource>
 @end
 

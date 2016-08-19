@@ -9,6 +9,9 @@
 #import "AppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <TwitterKit/TwitterKit.h>
+#import <Twitter/Twitter.h>
+#import "MBProgressHUD.h"
+
 
 @interface AppDelegate ()
 
@@ -17,19 +20,51 @@
 @implementation AppDelegate
 
 
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    [[Twitter sharedInstance] startWithConsumerKey:@"rJyy0jYbFqEUuUDR8r6qdnUTU" consumerSecret:@"OXQDdT5NIXotKeXi0ZJLKpxXXBb9rf49RCb66tZGuHuYCuHTgT"];
+//    
     [Fabric with:@[[Twitter class]]];
     
+//    [Fabric with:@[TwitterKit]];
+
     
-    
-   
-    
-    
+    [[Twitter sharedInstance] startWithConsumerKey:@"rJyy0jYbFqEUuUDR8r6qdnUTU" consumerSecret:@"OXQDdT5NIXotKeXi0ZJLKpxXXBb9rf49RCb66tZGuHuYCuHTgT"];
+    [Fabric with:@[[Twitter class]]];
     return YES;
 }
+
+
+#pragma mark----Progressbar code!!!!
+- (void)showLoadingView:(BOOL)isShown activityTitle:(NSString*)title
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (isShown)
+        {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.window animated:YES];
+            hud.mode = MBProgressHUDModeAnnularDeterminate;
+            hud.labelText = title;
+        }
+        else
+        {
+            [MBProgressHUD hideHUDForView:self.window animated:YES];
+        }
+    });
+}
+
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+    if ([[Twitter sharedInstance] application:app openURL:url options:options]) {
+        return YES;
+    }
+    
+    // If you handle other (non Twitter Kit) URLs elsewhere in your app, return YES. Otherwise
+    return NO;
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
